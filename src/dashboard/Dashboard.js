@@ -1,16 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import Display from '../display/Display';
 import Controls from '../controls/Controls';
 
+import { toggleClosed, toggleLocked } from '../store/actions';
+
 class Dashboard extends React.Component {
-  state = {
-    locked: false,
-    closed: false,
-  };
 
   render() {
-    const { closed, locked } = this.state;
+    const { closed, locked } = this.props;
 
     return (
       <>
@@ -18,20 +17,19 @@ class Dashboard extends React.Component {
         <Controls
           locked={locked}
           closed={closed}
-          toggleLocked={this.toggleLocked}
-          toggleClosed={this.toggleClosed}
+          toggleLocked={this.props.toggleLocked}
+          toggleClosed={this.props.toggleClosed}
         />
       </>
     );
   }
-
-  toggleLocked = () => {
-    this.setState(prev => ({ locked: !prev.locked }));
-  };
-
-  toggleClosed = () => {
-    this.setState(prev => ({ closed: !prev.closed }));
-  };
 }
 
-export default Dashboard;
+const mapStateToProps = state => {
+  return {
+    locked: state.locked,
+    closed: state.closed
+  }
+}
+
+export default connect(mapStateToProps, { toggleClosed, toggleLocked })(Dashboard);
